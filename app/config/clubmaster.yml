@@ -4,6 +4,8 @@ parameters:
 
 club_user:
     default_country: DE
+    #welcome_mail_attachments:
+        #- shared/safe_image.png
 
 club_account_economic:
     enabled: false
@@ -24,13 +26,14 @@ club_payment_quickpay:
     controller: club_payment_quickpay_quickpay_index
     merchant: 89898978
     secret: %club_payment_quickpay.secret%
-    protocol: 4
-    language: en
-    currency: DKK
+    protocol: 7
+    language: de
+    currency: EUR
     autocapture: 1
+#    allow_subscription: true
     #cardtypelock:
     autofee: 0
-    quickpay_url: https://secure.quickpay.dk/form/
+    quickpay_url: https://secure.quickpay.dk/
     testmode: 1
 
 club_api:
@@ -48,6 +51,7 @@ club_ranking:
 
 club_shop:
     view_shop: true
+    hide_categories: false
     coupon_account_number: 1010
     guest_account_number: 1010
     voucher_text: Payment from %s, order %s
@@ -64,6 +68,7 @@ club_team:
     num_team_future: 4
     penalty_product_name: 'Penalty for missed team'
     public_user_activity: true
+    #public_teamlist: true
 
 club_booking:
     enabled: true
@@ -85,7 +90,7 @@ club_booking:
     public_user_activity: true
 
 club_mail:
-    default_sender_address: skopatz@gmx.net
+    default_sender_address: info@clubmaster.org
     default_sender_name: ClubMaster Administrator
     mail_on_welcome: true
     mail_on_booking: true
@@ -117,6 +122,9 @@ club_weather:
     #cityid: 2624886 # http://openweathermap.org/help/city_list.txt
     #units: metric
 
+club_media:
+    enabled: true
+
 club_tournament:
     enabled: true
 
@@ -127,3 +135,7 @@ club_extra:
     #facebook: true
     #twitter: true
     #googleplus: true
+
+club_kiosk:
+    default_location: 1
+    jquery_theme: start

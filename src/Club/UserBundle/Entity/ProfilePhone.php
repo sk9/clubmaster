@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="Club\UserBundle\Entity\ProfilePhoneRepository")
  * @ORM\Table(name="club_user_profile_phone")
- * @ORM\HasLifeCycleCallbacks()
+ * @ORM\HasLifecycleCallbacks()
  */
 class ProfilePhone
 {
@@ -23,7 +23,7 @@ class ProfilePhone
 
     /**
      * @ORM\Column(type="string")
-     * @Assert\NotBlank(groups={"user"})
+     * @Assert\NotBlank(groups={"user", "guest"})
      *
      * @var string $phone_number
      */

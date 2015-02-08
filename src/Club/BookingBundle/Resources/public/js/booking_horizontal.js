@@ -85,12 +85,12 @@ function makeBookedUrl(booking, url, pixel_size, field_width, day_start)
     if (booking.type == 'booking') {
         var left=$("#field_"+booking.field_id).css('left');
 
-        var book_str = booking.user.first_name+' '+booking.user.last_name+' - ';
+        var book_str = booking.user.first_name+' '+booking.user.last_name;
         if (booking.guest == true) {
-            book_str = book_str+'Guest';
+            book_str = book_str+' - Guest';
         } else {
             $.each(booking.users, function() {
-                book_str = book_str+this.first_name+' '+this.last_name;
+                book_str = book_str+' - '+this.first_name+' '+this.last_name;
             });
         }
 
@@ -108,11 +108,26 @@ function makeBookedUrl(booking, url, pixel_size, field_width, day_start)
     } else if (booking.type == 'plan') {
         $.each(booking.fields, function() {
             var left=$("#field_"+this.id).css('left');
+            var element_id = 'element_id_'+this.id+'-'+booking.id;
 
-            if (left) ret = ret+'<div class="link plan" style="height: '+height+'; top: '+top+'; left: '+left+'; width: '+width+';" onclick="setPlan('+booking.id+','+this.id+',\''+getTime(date)+'\')">&#160;'+booking.name+'</div>';
+            if (left) {
+                var ret = '<div id="'+element_id+'" onclick="setPlan('+booking.id+','+this.id+',\''+getTime(date)+'\')"></div>';
+
+                $("#bookings_plan").append(ret);
+
+                $('#'+element_id).css('top', top);
+                $('#'+element_id).css('height', height);
+                $('#'+element_id).css('left', left)
+                $('#'+element_id).css('width', width);
+                $('#'+element_id).css('background-color', booking.color);
+                $('#'+element_id).css('color', '#'+contrastingColor(booking.color.replace(/^#/,"")));
+
+                $('#'+element_id).addClass('plan');
+                $('#'+element_id).addClass('link');
+
+                $('#'+element_id).html('&#160;'+booking.name);
+            }
         });
-
-        $("#bookings_plan").append(ret);
     }
 }
 
@@ -255,3 +270,23 @@ $(function() {
         $("#bookings").css('left', new_pos+'px');
     });
 });
+
+function contrastingColor(color) {
+    return (luma(color) >= 165) ? '000' : 'fff';
+}
+
+function luma(color) {
+    var rgb = (typeof color === 'string') ? hexToRGBArray(color) : color;
+    return (0.2126 * rgb[0]) + (0.7152 * rgb[1]) + (0.0722 * rgb[2]);
+}
+
+function hexToRGBArray(color) {
+    if (color.length === 3)
+        color = color.charAt(0) + color.charAt(0) + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2);
+    else if (color.length !== 6)
+        return 'b85959';
+    var rgb = [];
+    for (var i = 0; i <= 2; i++)
+        rgb[i] = parseInt(color.substr(i * 2, 2), 16);
+    return rgb;
+}

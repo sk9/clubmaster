@@ -5,6 +5,7 @@ namespace Club\UserBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class AuthController extends Controller
 {
@@ -30,6 +31,10 @@ class AuthController extends Controller
      */
     public function loginAction()
     {
+        $this->get('club_extra.flash')->addInfo($this->get('translator')
+            ->trans('Enter your username and password.')
+        );
+
         return array();
     }
 
@@ -79,6 +84,9 @@ class AuthController extends Controller
             return $this->redirect($this->generateUrl('homepage'));
         }
 
+        $this->get('club_extra.flash')->addInfo($this->get('translator')
+            ->trans('Enter your username or email address, and you will receive a reset password email within a few minutes.')
+        );
         return array(
             'form' => $form->createView()
         );
@@ -128,7 +136,7 @@ class AuthController extends Controller
      * @Route("/{_locale}/auth/signin")
      * @Template()
      */
-    public function signinAction()
+    public function signinAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -137,29 +145,41 @@ class AuthController extends Controller
             ->get();
 
         $form = $this->createForm(new \Club\UserBundle\Form\User(), $user);
+        $formGuest = $this->createForm(new \Club\UserBundle\Form\GuestType(), $user);
 
-        if ($this->getRequest()->getMethod() == 'POST') {
-            $form->bind($this->getRequest());
-            if ($form->isValid()) {
+        $form->handleRequest($request);
+        $formGuest->handleRequest($request);
 
-                $this->get('clubmaster.user')->save();
-                $this->get('session')->getFlashBag()->add('notice',$this->get('translator')->trans('Your account has been created.'));
+        $userCreated = false;
 
-                $token = new \Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken(
-                    $user,
-                    null,
-                    'user'
-                );
-                $this->get('security.context')->setToken($token);
-                $url = $this->get('session')->get('_security.user.target_path');
-                $this->get('session')->set('_security.user.target_path', null);
+        if ($form->isValid()) {
+            $this->get('clubmaster.user')->save();
+            $userCreated = true;
+        }
 
-                return $this->redirect($url);
-            }
+        if ($formGuest->isValid()) {
+            $this->get('clubmaster.user')->save(false);
+            $userCreated = true;
+        }
+
+        if ($userCreated) {
+            $this->get('session')->getFlashBag()->add('notice',$this->get('translator')->trans('Your account has been created.'));
+
+            $token = new \Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken(
+                $user,
+                null,
+                'user'
+            );
+            $this->get('security.context')->setToken($token);
+            $url = $this->get('session')->get('_security.user.target_path');
+            $this->get('session')->set('_security.user.target_path', null);
+
+            return $this->redirect($url);
         }
 
         return array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'formGuest' => $formGuest->createView()
         );
     }
 }
