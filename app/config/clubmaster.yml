@@ -3,13 +3,13 @@ parameters:
     upload_path: uploads
 
 club_user:
-    default_country: DK
+    default_country: DE
 
 club_account_economic:
     enabled: false
     agreement: xxxxxx
-    username: xxx
-    password: xxxxxxxx
+    username: %club_account_economic.username%
+    password: %club_account_economic.password%
     economic_url: https://www.e-conomic.com/secure/api1/EconomicWebservice.asmx?WSDL
     contraAccount: 5820
     cashbook: Daglig
@@ -23,7 +23,7 @@ club_payment_quickpay:
     enabled: false
     controller: club_payment_quickpay_quickpay_index
     merchant: 89898978
-    secret: 29p61DveBZ79c3144LW61lVz1qrwk2gfAFCxPyi5sn49m3Y3IRK5M6SN5d8a68u7
+    secret: %club_payment_quickpay.secret%
     protocol: 4
     language: en
     currency: DKK
@@ -85,7 +85,7 @@ club_booking:
     public_user_activity: true
 
 club_mail:
-    default_sender_address: info@clubmaster.org
+    default_sender_address: skopatz@gmx.net
     default_sender_name: ClubMaster Administrator
     mail_on_welcome: true
     mail_on_booking: true
@@ -112,7 +112,7 @@ club_checkin:
 club_weather:
     enabled: true
     appid: 2f57a52e713c92e62195a21efe934c0f
-    location: Aalborg,dk
+    location: Hamburg, DE
     #lonlat: 9.918700,57.048000
     #cityid: 2624886 # http://openweathermap.org/help/city_list.txt
     #units: metric

@@ -15,3 +15,7 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     develop_email:     user@example.com
+
+    club_account_economic.username: username
+    club_account_economic.password: password
+    club_payment_quickpay.secret: 29p61DveBZ79c3144LW61lVz1qrwk2gfAFCxPyi5sn49m3Y3IRK5M6SN5d8a68u7
